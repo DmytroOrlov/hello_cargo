@@ -1,31 +1,22 @@
 extern crate rand;
 
-use std::io;
-use std::cmp::Ordering;
-use rand::Rng;
+use rand::distributions::{IndependentSample, Range};
 
 fn main() {
-    println!("Guess the number!");
+    let between = Range::new(-1f64, 1.);
+    let mut rng = rand::thread_rng();
 
-    let secret_number = rand::thread_rng().gen_range(1, 101);
+    let total = 10_000_000;
+    let mut in_circle = 0;
 
-    println!("The secret number is: {}", secret_number);
-
-    println!("Please input your guess.");
-
-    let mut guess = String::new();
-
-    io::stdin().read_line(&mut guess)
-        .expect("Failed to read line");
-
-    let guess: u32 = guess.trim().parse()
-        .expect("Please type a number!");
-
-    println!("You guessed: {}", guess);
-
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal => println!("You win!"),
+    for _ in 0..total {
+        let a = between.ind_sample(&mut rng);
+        let b = between.ind_sample(&mut rng);
+        if a*a + b*b <= 1. {
+            in_circle += 1;
+        }
     }
+
+    // prints something close to 3.14159...
+    println!("{}", 4. * (in_circle as f64) / (total as f64));
 }
