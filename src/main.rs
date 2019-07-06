@@ -1,7 +1,7 @@
 extern crate rand;
 
 use rand::Rng;
-use rand::distributions::{IndependentSample, Range};
+use rand::distributions::{Distribution, Range};
 
 struct SimulationResult {
     win: bool,
@@ -11,10 +11,10 @@ struct SimulationResult {
 // Run a single simulation of the Monty Hall problem.
 fn simulate<R: Rng>(random_door: &Range<u32>, rng: &mut R)
                     -> SimulationResult {
-    let car = random_door.ind_sample(rng);
+    let car = random_door.sample(rng);
 
     // This is our initial choice
-    let mut choice = random_door.ind_sample(rng);
+    let mut choice = random_door.sample(rng);
 
     // The game host opens a door
     let open = game_host_open(car, choice, rng);
